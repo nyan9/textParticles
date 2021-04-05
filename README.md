@@ -14,3 +14,10 @@ Nodes will either be connected or disconnected to other nodes based on proximity
 
 ### Wireframes
 https://wireframe.cc/tylPey
+
+### Tech Stack
++ JavaScript
++ Canvas
++ CSS
+
+### Timeline
