@@ -11,9 +11,10 @@ let node;
 function setupNode() {
   node = new Node(width / 2, height / 2);
 }
-setupNode();
 
 function showNode() {
-  node.animate(width, height);
+  setupNode();
+  // node.animate(width, height);
+  node.draw();
 }
 showNode();

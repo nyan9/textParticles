@@ -5,11 +5,11 @@ class Node {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.radius = 50;
+    this.radius = 30;
     this.initialX = this.x;
     this.initialY = this.y;
     this.velX = 0.1;
-    this.velY = 0.1;
+    this.velY = -0.1;
     this.dt = 10;
 
     this.move = this.move.bind(this);
