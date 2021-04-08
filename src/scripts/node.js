@@ -1,35 +1,49 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+import V from "./vector";
 
 class Node {
   constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.radius = 30;
-    this.initialX = this.x;
-    this.initialY = this.y;
-    this.velX = 0.1;
-    this.velY = -0.1;
-    this.dt = 10;
+    this.radius = 60;
+    this.position = new V(x, y);
+    this.velocity = new V(0.1, 0.2);
+    this.deltaT = 20;
+    this.initialX = x;
+    this.initialY = y;
 
-    this.move = this.move.bind(this);
-    this.draw = this.draw.bind(this);
     this.animate = this.animate.bind(this);
-    this.clearNode = this.clearNode.bind(this);
-  }
-
-  move() {
-    // position = initial position + velocity * deltaTime
-    this.x = this.x + this.velX * this.dt;
-    this.y = this.y + this.velY * this.dt;
   }
 
   draw() {
     ctx.fillStyle = "rgb(255,56,100)";
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
     ctx.closePath();
     ctx.fill();
+  }
+
+  move() {
+    // position = initial position + velocity * deltaTime
+    this.position.add(this.velocity.times(this.deltaT));
+  }
+
+  bounce() {
+    // Bottom edge collision
+    if (this.position.y >= canvas.height - this.radius) {
+      this.velocity.y = -this.velocity.y;
+    }
+    // Right edge collision
+    if (this.position.x >= canvas.width - this.radius) {
+      this.velocity.x = -this.velocity.x;
+    }
+    // Top edge collision
+    if (this.position.y <= this.radius) {
+      this.velocity.y = -this.velocity.y;
+    }
+    // Left edge collision
+    if (this.position.x <= this.radius) {
+      this.velocity.x = -this.velocity.x;
+    }
   }
 
   clearNode() {
@@ -38,8 +52,9 @@ class Node {
 
   animate() {
     this.clearNode();
-    setTimeout(this.animate, this.dt);
+    setTimeout(this.animate, this.deltaT);
     this.move();
+    this.bounce();
     this.draw();
   }
 }
