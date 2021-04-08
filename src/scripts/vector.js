@@ -4,7 +4,7 @@ class Vector {
     this.y = y;
   }
 
-  clone() {
+  dup() {
     return new Vector(this.x, this.y);
   }
 
@@ -14,10 +14,14 @@ class Vector {
     return this;
   }
 
-  substract(other) {
+  subtract(other) {
     this.x -= other.x;
     this.y -= other.y;
     return this;
+  }
+
+  minus(other) {
+    return this.dup().subtract(other);
   }
 
   multiply(num) {
@@ -27,7 +31,26 @@ class Vector {
   }
 
   times(num) {
-    return this.clone().multiply(num);
+    return this.dup().multiply(num);
+  }
+
+  magnitude() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  normalize() {
+    let length = this.magnitude();
+    if (length === 0) {
+      length = 1;
+      this.x = 1;
+      this.y = 0;
+    }
+    this.multiply(1 / length);
+    return this;
+  }
+
+  setMagnitude(num) {
+    return this.normalize().multiply(num);
   }
 }
 

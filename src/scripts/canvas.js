@@ -24,10 +24,6 @@ function populateNodes(n = 100) {
 populateNodes(1);
 console.log(nodesArray);
 
-function clearCanvas() {
-  ctx.clearRect(0, 0, width, height);
-}
-
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel

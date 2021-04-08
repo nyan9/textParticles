@@ -1,6 +1,7 @@
+import V from "./vector";
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-import V from "./vector";
 
 class Node {
   constructor(x, y) {
