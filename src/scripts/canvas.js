@@ -1,10 +1,12 @@
 import Node from "./node";
+import V from "./vector";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
+const middle = new V(width / 2, height / 2);
 let nodes = [];
 
 // Linear interpolation
@@ -15,10 +17,10 @@ function lerp(min, max, v) {
 function populateNodes(n = 100) {
   nodes = [];
   for (let i = 0; i < n; i++) {
-    let x = Math.random() * width;
-    let y = Math.random() * height;
-
-    nodes.push(new Node(x, y));
+    let node = new Node(middle.x, middle.y);
+    node.position.randomize(lerp(0, width / 2, Math.random())).add(middle);
+    node.velocity.randomize(lerp(0.05, 0.1, Math.random()));
+    nodes.push(node);
   }
 }
 populateNodes();

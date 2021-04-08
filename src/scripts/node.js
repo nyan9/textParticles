@@ -4,8 +4,8 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 class Node {
-  constructor(x, y, vx, vy) {
-    this.radius = 10;
+  constructor(x, y) {
+    this.radius = 3;
     this.position = new V(x, y);
     this.velocity = new V(0.1, 0.2);
     this.deltaT = 20;

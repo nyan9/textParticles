@@ -38,19 +38,35 @@ class Vector {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
 
-  normalize() {
+  normalize(num) {
     let length = this.magnitude();
     if (length === 0) {
       length = 1;
       this.x = 1;
       this.y = 0;
     }
-    this.multiply(1 / length);
+    this.multiply(num / length);
     return this;
   }
 
   setMagnitude(num) {
     return this.normalize().multiply(num);
+  }
+
+  setAngle(angle) {
+    let length = this.magnitude();
+    if (length === 0) {
+      length = 1;
+      this.x = 1;
+      this.y = 0;
+    }
+    this.x = length * Math.cos(angle);
+    this.y = length * Math.sin(angle);
+    return this;
+  }
+
+  randomize(n = 1) {
+    return this.normalize(n).setAngle(2 * Math.PI * Math.random());
   }
 }
 
