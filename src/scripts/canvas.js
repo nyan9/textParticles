@@ -16,8 +16,10 @@ function lerp(min, max, v) {
 
 function populateNodes(n = 100) {
   nodes = [];
+
   for (let i = 0; i < n; i++) {
     let node = new Node(middle.x, middle.y);
+
     node.position.randomize(lerp(0, width / 2, Math.random())).add(middle);
     node.velocity.randomize(lerp(0.05, 0.1, Math.random()));
     nodes.push(node);
@@ -30,6 +32,7 @@ function clear() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+// each frame's actions
 function frame() {
   clear();
   for (let node of nodes) {
@@ -39,9 +42,9 @@ function frame() {
   }
 }
 
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // MIT license
 (function () {
   var lastTime = 0;
@@ -75,3 +78,9 @@ function renderNodes() {
   requestAnimationFrame(renderNodes);
 }
 renderNodes();
+
+function drawConnections() {
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {}
+  }
+}
