@@ -5,7 +5,7 @@ const ctx = canvas.getContext("2d");
 
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
-let nodesArray = [];
+let nodes = [];
 
 // Linear interpolation
 function lerp(min, max, v) {
@@ -13,16 +13,29 @@ function lerp(min, max, v) {
 }
 
 function populateNodes(n = 100) {
-  nodesArray = [];
+  nodes = [];
   for (let i = 0; i < n; i++) {
     let x = Math.random() * width;
     let y = Math.random() * height;
 
-    nodesArray.push(new Node(x, y));
+    nodes.push(new Node(x, y));
   }
 }
-populateNodes(1);
-console.log(nodesArray);
+populateNodes();
+console.log(nodes);
+
+function clear() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function frame() {
+  clear();
+  for (let node of nodes) {
+    node.move();
+    node.draw();
+    node.bounce();
+  }
+}
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -56,9 +69,7 @@ console.log(nodesArray);
 })();
 
 function renderNodes() {
-  for (let node of nodesArray) {
-    node.animate();
-  }
-  // requestAnimationFrame(renderNodes);
+  frame();
+  requestAnimationFrame(renderNodes);
 }
 renderNodes();
