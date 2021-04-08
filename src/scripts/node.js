@@ -14,7 +14,12 @@ class Node {
     this.animate = this.animate.bind(this);
   }
 
+  clearNode() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
   draw() {
+    this.clearNode();
     ctx.fillStyle = "rgb(255,56,100)";
     ctx.beginPath();
     ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
@@ -46,16 +51,15 @@ class Node {
     }
   }
 
-  clearNode() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  animate() {
-    this.clearNode();
-    setTimeout(this.animate, this.deltaT);
+  frame() {
     this.move();
     this.bounce();
     this.draw();
+  }
+
+  animate() {
+    this.frame();
+    setTimeout(this.animate, this.deltaT);
   }
 }
 
