@@ -1,13 +1,14 @@
 import Node from "./node";
 import V from "./vector";
+import * as T from "./text";
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas"),
+  ctx = canvas.getContext("2d");
 
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
-
 const middle = new V(width / 2, height / 2);
+
 let nodes = [];
 
 // Linear interpolation
@@ -78,7 +79,6 @@ function clear() {
 function frame(deltaT) {
   clear();
   drawConnections();
-
   for (let node of nodes) {
     node.move(deltaT);
     node.draw();
@@ -128,3 +128,5 @@ function renderNodes() {
   requestAnimationFrame(renderNodes);
 }
 renderNodes();
+
+T.initText();

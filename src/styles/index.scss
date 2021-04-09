@@ -16,4 +16,13 @@ body {
   top: 0;
   left: 0;
   background: #0d0221;
+  z-index: -1;
+}
+
+#text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  z-index: 0;
 }
