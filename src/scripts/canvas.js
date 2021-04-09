@@ -6,12 +6,18 @@ const ctx = canvas.getContext("2d");
 
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
+
 const middle = new V(width / 2, height / 2);
 let nodes = [];
 
 // Linear interpolation
 function lerp(min, max, v) {
   return max * v + min * (1 - v);
+}
+
+// min max normalization
+function rescale(min, max, v) {
+  return (v - min) / (max - min);
 }
 
 function populateNodes(n = 100) {
@@ -28,6 +34,43 @@ function populateNodes(n = 100) {
 populateNodes();
 console.log(nodes);
 
+function drawLine(pos1, pos2, color) {
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.lineWidth = 2;
+  ctx.moveTo(pos1.x, pos1.y);
+  ctx.lineTo(pos2.x, pos2.y);
+  ctx.stroke();
+}
+
+// max, min distance threshold
+const maxDistance = 150;
+const minDistance = 50;
+
+function drawConnection(node1, node2) {
+  let displacement = node2.position.minus(node1.position);
+  let distance = displacement.magnitude();
+
+  // do nothing, if displacement vector is longer than maxDistance
+  if (distance >= maxDistance) {
+    return;
+  }
+
+  // scale color opacity(alpha) depending on distance between nodes
+  let alpha = rescale(maxDistance, minDistance, distance);
+  let color = `hsla(180, 90%, 60%, ${alpha})`;
+
+  drawLine(node1.position, node2.position, color);
+}
+
+function drawConnections() {
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      drawConnection(nodes[i], nodes[j]);
+    }
+  }
+}
+
 function clear() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -35,6 +78,8 @@ function clear() {
 // each frame's actions
 function frame() {
   clear();
+  drawConnections();
+
   for (let node of nodes) {
     node.move();
     node.draw();
@@ -78,9 +123,3 @@ function renderNodes() {
   requestAnimationFrame(renderNodes);
 }
 renderNodes();
-
-function drawConnections() {
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {}
-  }
-}
