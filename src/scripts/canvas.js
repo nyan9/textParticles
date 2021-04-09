@@ -32,7 +32,6 @@ function populateNodes(n = 100) {
   }
 }
 populateNodes();
-console.log(nodes);
 
 // max, min distance threshold
 const maxDistance = 150;
