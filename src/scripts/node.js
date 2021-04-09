@@ -8,7 +8,6 @@ class Node {
     this.radius = 4;
     this.position = new V(x, y);
     this.velocity = new V(0.1, 0.2);
-    this.deltaT = 20;
     this.initialX = x;
     this.initialY = y;
   }
@@ -25,9 +24,9 @@ class Node {
     ctx.fill();
   }
 
-  move() {
+  move(deltaT) {
     // position = initial position + velocity * deltaTime
-    this.position.add(this.velocity.times(this.deltaT));
+    this.position.add(this.velocity.times(deltaT));
   }
 
   bounce() {

@@ -34,6 +34,10 @@ function populateNodes(n = 100) {
 populateNodes();
 console.log(nodes);
 
+// max, min distance threshold
+const maxDistance = 150;
+const minDistance = 50;
+
 function drawLine(pos1, pos2, color) {
   ctx.strokeStyle = color;
   ctx.beginPath();
@@ -42,10 +46,6 @@ function drawLine(pos1, pos2, color) {
   ctx.lineTo(pos2.x, pos2.y);
   ctx.stroke();
 }
-
-// max, min distance threshold
-const maxDistance = 150;
-const minDistance = 50;
 
 function drawConnection(node1, node2) {
   let displacement = node2.position.minus(node1.position);
@@ -58,7 +58,7 @@ function drawConnection(node1, node2) {
 
   // scale color opacity(alpha) depending on distance between nodes
   let alpha = rescale(maxDistance, minDistance, distance);
-  let color = `hsla(180, 90%, 60%, ${alpha})`;
+  let color = `hsla(181, 79%, 54%, ${alpha})`;
 
   drawLine(node1.position, node2.position, color);
 }
@@ -76,12 +76,12 @@ function clear() {
 }
 
 // each frame's actions
-function frame() {
+function frame(deltaT) {
   clear();
   drawConnections();
 
   for (let node of nodes) {
-    node.move();
+    node.move(deltaT);
     node.draw();
     node.bounce();
   }
@@ -118,8 +118,14 @@ function frame() {
     };
 })();
 
+// keep track of deltaTime every frame
+let prevTime = 0;
 function renderNodes() {
-  frame();
+  let now = performance.now();
+  let deltaT = now - prevTime;
+  prevTime = now;
+
+  frame(deltaT);
   requestAnimationFrame(renderNodes);
 }
 renderNodes();
