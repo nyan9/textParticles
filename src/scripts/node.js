@@ -5,7 +5,7 @@ const stage = document.getElementById("stage");
 class Node {
   constructor(x, y, r = 3) {
     this.radius = r;
-    this.position = new V(x, y);
+    this.position = new V(x, y + 50); // offsets text on y-axis by +50
     this.velocity = new V(0.1, 0.2);
     this.initialX = this.position.x;
     this.initialY = this.position.y;

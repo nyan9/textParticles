@@ -8,14 +8,15 @@ const height = (text.height = window.innerHeight);
 export let textPixels = [];
 
 export function getText() {
-  ctx.font = "bold 30px sans-serif";
-  ctx.fillText(`${textInput.value}`, 5, 20);
+  ctx.textAlign = "center";
+  ctx.font = `bold ${width / 60}px sans-serif`;
+  ctx.fillText(`${textInput.value}`, 60, 30);
 }
 
 export function getTextData() {
   textPixels = [];
 
-  let textImgData = ctx.getImageData(0, 0, 400, 30);
+  let textImgData = ctx.getImageData(0, 0, width, 40);
   // every single pixel of image data
   let pixData = textImgData.data;
 
