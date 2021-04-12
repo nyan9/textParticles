@@ -10,6 +10,7 @@ const height = (canvas.height = window.innerHeight);
 const middle = new V(width / 2, height / 2);
 
 let nodes = [];
+let textNodes = [];
 
 // Linear interpolation
 function lerp(min, max, v) {
@@ -21,22 +22,32 @@ function rescale(min, max, v) {
   return (v - min) / (max - min);
 }
 
-function populateNodes(n = 100) {
+function populateNodes(n = 50) {
   nodes = [];
 
   for (let i = 0; i < n; i++) {
-    let node = new Node(middle.x, middle.y);
+    let node = new Node(middle.x, middle.y, 4);
 
     node.position.randomize(lerp(0, width / 2, Math.random())).add(middle);
     node.velocity.randomize(lerp(0.05, 0.1, Math.random()));
+
     nodes.push(node);
   }
 }
-populateNodes();
 
-// max, min distance threshold
-const maxDistance = 150;
-const minDistance = 50;
+function populateTextNodes() {
+  textNodes = [];
+
+  let textSize = 10;
+  let textNodePos = T.textPixels;
+  for (let i = 0; i <= textNodePos.length - 1; i++) {
+    let tx = textNodePos[i].positionX * textSize;
+    let ty = textNodePos[i].positionY * textSize;
+    let node = new Node(tx, ty, 2);
+
+    textNodes.push(node);
+  }
+}
 
 function drawLine(pos1, pos2, color) {
   ctx.strokeStyle = color;
@@ -47,10 +58,12 @@ function drawLine(pos1, pos2, color) {
   ctx.stroke();
 }
 
-function drawConnection(node1, node2) {
-  let displacement = node2.position.minus(node1.position);
-  let distance = displacement.magnitude();
+// max, min distance threshold for stage connections
+const maxDistance = 100;
+const minDistance = 30;
 
+// draw stage node connections
+function drawConnection(node1, node2, distance) {
   // do nothing, if displacement vector is longer than maxDistance
   if (distance >= maxDistance) {
     return;
@@ -63,10 +76,35 @@ function drawConnection(node1, node2) {
   drawLine(node1.position, node2.position, color);
 }
 
-function drawConnections() {
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      drawConnection(nodes[i], nodes[j]);
+// draw text node connections
+function drawTextConnection(node1, node2, distance) {
+  if (distance >= 20) {
+    return;
+  }
+
+  let alpha = rescale(20, 10, distance);
+  let color = `hsla(181, 79%, 54%, ${alpha})`;
+
+  drawLine(node1.position, node2.position, color);
+}
+
+function drawConnections(nodeType) {
+  let displacement;
+  let distance;
+
+  for (let i = 0; i < nodeType.length; i++) {
+    for (let j = i + 1; j < nodeType.length; j++) {
+      // shortest path between two nodes
+      displacement = nodeType[j].position.minus(nodeType[i].position);
+      // length between two nodes
+      distance = displacement.magnitude();
+
+      // check if passed in type of nodes are stageNodes or textNodes
+      if (nodeType === textNodes) {
+        drawTextConnection(nodeType[i], nodeType[j], distance);
+      } else {
+        drawConnection(nodeType[i], nodeType[j], distance);
+      }
     }
   }
 }
@@ -77,8 +115,7 @@ function clear() {
 
 // each frame's actions
 function frame(deltaT) {
-  clear();
-  drawConnections();
+  drawConnections(nodes);
   for (let node of nodes) {
     node.move(deltaT);
     node.draw();
@@ -86,6 +123,14 @@ function frame(deltaT) {
   }
 }
 
+function textFrame() {
+  drawConnections(textNodes);
+  for (let textNode of textNodes) {
+    textNode.draw();
+  }
+}
+
+// BEGIN POLYFILL
 // requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -116,7 +161,9 @@ function frame(deltaT) {
       clearTimeout(id);
     };
 })();
+// END POLYFILL
 
+// render Nodes
 // keep track of deltaTime every frame
 let prevTime = 0;
 function renderNodes() {
@@ -124,9 +171,13 @@ function renderNodes() {
   let deltaT = now - prevTime;
   prevTime = now;
 
+  clear();
   frame(deltaT);
+  textFrame();
   requestAnimationFrame(renderNodes);
 }
 renderNodes();
 
-T.initText();
+populateNodes();
+T.getTextData();
+populateTextNodes();

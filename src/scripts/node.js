@@ -4,16 +4,12 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 class Node {
-  constructor(x, y) {
-    this.radius = 4;
+  constructor(x, y, r = 3) {
+    this.radius = r;
     this.position = new V(x, y);
     this.velocity = new V(0.1, 0.2);
-    this.initialX = x;
-    this.initialY = y;
-  }
-
-  clearNode() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.initialX = this.position.x;
+    this.initialY = this.position.y;
   }
 
   draw() {
