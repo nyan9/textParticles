@@ -1,4 +1,5 @@
 const text = document.getElementById("text"),
+  textInput = document.getElementById("textInput"),
   ctx = text.getContext("2d");
 
 const width = (text.width = window.innerWidth);
@@ -7,14 +8,13 @@ const height = (text.height = window.innerHeight);
 export let textPixels = [];
 
 export function getText() {
-  ctx.fillStyle = "white";
   ctx.font = "bold 30px sans-serif";
-  ctx.fillText("Aeiou", 5, 25);
-
-  // ctx.strokeRect(0, 0, 400, 30);
+  ctx.fillText(`${textInput.value}`, 5, 20);
 }
 
 export function getTextData() {
+  textPixels = [];
+
   let textImgData = ctx.getImageData(0, 0, 400, 30);
   // every single pixel of image data
   let pixData = textImgData.data;
@@ -28,8 +28,4 @@ export function getTextData() {
       }
     }
   }
-  console.log(textImgData);
-  console.log(textPixels);
 }
-
-getText();

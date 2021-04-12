@@ -1,7 +1,6 @@
 import V from "./vector";
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const stage = document.getElementById("stage");
 
 class Node {
   constructor(x, y, r = 3) {
@@ -12,12 +11,12 @@ class Node {
     this.initialY = this.position.y;
   }
 
-  draw() {
-    ctx.fillStyle = "rgb(255,56,100)";
-    ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    ctx.closePath();
-    ctx.fill();
+  draw(ctxType) {
+    ctxType.fillStyle = "rgb(255,56,100)";
+    ctxType.beginPath();
+    ctxType.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    ctxType.closePath();
+    ctxType.fill();
   }
 
   move(deltaT) {
@@ -27,15 +26,15 @@ class Node {
 
   bounce() {
     // Bottom edge collision
-    if (this.position.y >= canvas.height - this.radius) {
+    if (this.position.y >= stage.height - this.radius) {
       this.velocity.y = -this.velocity.y;
       // if outside of boundary, insert back into the box at the boundary
-      this.position.y = canvas.height - this.radius;
+      this.position.y = stage.height - this.radius;
     }
     // Right edge collision
-    if (this.position.x >= canvas.width - this.radius) {
+    if (this.position.x >= stage.width - this.radius) {
       this.velocity.x = -this.velocity.x;
-      this.position.x = canvas.width - this.radius;
+      this.position.x = stage.width - this.radius;
     }
     // Top edge collision
     if (this.position.y <= this.radius) {

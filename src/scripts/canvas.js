@@ -2,11 +2,14 @@ import Node from "./node";
 import V from "./vector";
 import * as T from "./text";
 
-const canvas = document.getElementById("canvas"),
-  ctx = canvas.getContext("2d");
+const stage = document.getElementById("stage"),
+  text = document.getElementById("text"),
+  textInput = document.getElementById("textInput"),
+  ctxStage = stage.getContext("2d"),
+  ctxText = text.getContext("2d");
 
-const width = (canvas.width = window.innerWidth);
-const height = (canvas.height = window.innerHeight);
+const width = (stage.width = window.innerWidth);
+const height = (stage.height = window.innerHeight);
 const middle = new V(width / 2, height / 2);
 
 let nodes = [];
@@ -50,20 +53,20 @@ function populateTextNodes() {
 }
 
 function drawLine(pos1, pos2, color) {
-  ctx.strokeStyle = color;
-  ctx.beginPath();
-  ctx.lineWidth = 2;
-  ctx.moveTo(pos1.x, pos1.y);
-  ctx.lineTo(pos2.x, pos2.y);
-  ctx.stroke();
+  ctxStage.strokeStyle = color;
+  ctxStage.beginPath();
+  ctxStage.lineWidth = 2;
+  ctxStage.moveTo(pos1.x, pos1.y);
+  ctxStage.lineTo(pos2.x, pos2.y);
+  ctxStage.stroke();
 }
-
-// max, min distance threshold for stage connections
-const maxDistance = 100;
-const minDistance = 30;
 
 // draw stage node connections
 function drawConnection(node1, node2, distance) {
+  // max, min distance threshold for connections
+  const maxDistance = 150;
+  const minDistance = 30;
+
   // do nothing, if displacement vector is longer than maxDistance
   if (distance >= maxDistance) {
     return;
@@ -78,11 +81,14 @@ function drawConnection(node1, node2, distance) {
 
 // draw text node connections
 function drawTextConnection(node1, node2, distance) {
-  if (distance >= 20) {
+  const maxDistance = 20;
+  const minDistance = 5;
+
+  if (distance >= maxDistance) {
     return;
   }
 
-  let alpha = rescale(20, 10, distance);
+  let alpha = rescale(maxDistance, minDistance, distance);
   let color = `hsla(181, 79%, 54%, ${alpha})`;
 
   drawLine(node1.position, node2.position, color);
@@ -110,7 +116,8 @@ function drawConnections(nodeType) {
 }
 
 function clear() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctxStage.clearRect(0, 0, stage.width, stage.height);
+  ctxText.clearRect(0, 0, stage.width, stage.height);
 }
 
 // each frame's actions
@@ -118,7 +125,7 @@ function frame(deltaT) {
   drawConnections(nodes);
   for (let node of nodes) {
     node.move(deltaT);
-    node.draw();
+    node.draw(ctxStage);
     node.bounce();
   }
 }
@@ -126,7 +133,7 @@ function frame(deltaT) {
 function textFrame() {
   drawConnections(textNodes);
   for (let textNode of textNodes) {
-    textNode.draw();
+    textNode.draw(ctxText);
   }
 }
 
@@ -172,12 +179,23 @@ function renderNodes() {
   prevTime = now;
 
   clear();
-  frame(deltaT);
   textFrame();
+  frame(deltaT);
   requestAnimationFrame(renderNodes);
 }
-renderNodes();
+
+function initText() {
+  clear();
+  T.getText();
+  T.getTextData();
+  populateTextNodes();
+}
+
+// EVENT LISTENERS
+textInput.addEventListener("keyup", initText);
 
 populateNodes();
-T.getTextData();
-populateTextNodes();
+renderNodes();
+
+console.log(textNodes);
+console.log(T.textPixels);
