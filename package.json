@@ -10,9 +10,10 @@
     "not dead"
   ],
   "scripts": {
-    "serve": "NODE_ENV=development webpack-dev-server --config webpack.dev.js ",
+    "serve": "NODE_ENV=development webpack serve --config webpack.dev.js ",
     "watch": "NODE_ENV=development webpack --watch --config webpack.dev.js ",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js"
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
+    "dev": "concurrently \"npm run serve\" \"npm run watch\""
   },
   "author": "",
   "license": "ISC",
@@ -23,17 +24,21 @@
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.2.0",
-    "fibers": "^5.0.0",
     "file-loader": "^6.2.0",
     "mini-css-extract-plugin": "^1.4.0",
-    "postcss-loader": "^5.2.0",
+    "postcss-loader": "^4.2.0",
+    "resolve-url-loader": "^3.1.2",
     "sass": "^1.32.8",
-    "sass-loader": "^11.0.1",
+    "sass-loader": "^10.1.1",
     "style-loader": "^2.0.0",
     "url-loader": "^4.1.1",
-    "webpack": "^5.30.0",
+    "webpack": "^4.46.0",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.7.3"
+  },
+  "dependencies": {
+    "concurrently": "^6.0.1",
+    "fibers": "^5.0.0"
   }
 }
