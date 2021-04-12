@@ -196,6 +196,3 @@ textInput.addEventListener("keyup", initText);
 
 populateNodes();
 renderNodes();
-
-console.log(textNodes);
-console.log(T.textPixels);
